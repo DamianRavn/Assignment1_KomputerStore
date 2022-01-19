@@ -8,19 +8,77 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <h1>Komputer Store</h1>
-    </div>
-    <div class="content">
-        <h2>
-            Joe Banker
-        </h2>
-        <p>Balance: </p>
-        <footer>
-            <button id="bank-button">Get a loan</button>
-        </footer>
-    </div>
+    <!-- Page -->
+    <div class="page-wrapper">
+        <!-- Title -->
+        <header class="header">
+            <h3>Komputer Store</h3>
+        </header>
+        <!-- First row -->
+        <div class="row1">
+            <div class="content content-row-size">
+                <h2>
+                    Joe Banker
+                </h2>
+                <p>Balance: </p>
+                <p>Outstanding Loan</p>
+                <footer class="button-footer">
+                    <button id="bank-button">Get a loan</button>
+                    <button id="repay-button">Repay Loan</button>
+                </footer>
+            </div>
+            <div class="content content-row-size">
+                <h2>
+                    Work
+                </h2>
+                <p>pay: </p>
+                <footer class="button-footer">
+                    <button id="pay-bank-button">Bank</button>
+                    <button id="work-button">Work</button>
+                </footer>
+            </div>
+            <div class="content content-row-size">
+                <h2>
+                    Laptops
+                </h2>
+                <form action="">
+                    <select name="Laptops" id="Laptop-picker">
+                      <option value="volvo">Laptop1</option>
+                      <option value="saab">Laptop2</option>
+                      <option value="opel">Laptop3</option>
+                      <option value="audi">Laptop4</option>
+                    </select>
+                </form>
+                <p>Laptop Text</p>
+            </div>
+        </div>
 
+        <!-- Second row/ computer info -->
+        <div class="computer-info">
+            <div class="content visible-border content-info-size">
+                <div class="row2">
+                    <div class="column">
+                        <img src="">
+                    </div>
+                    <div class="column">
+                        <h2>
+                            Computer
+                        </h2>
+                        <p>computer text </p>
+                    </div>
+                    <div class="column">
+                        <h2>
+                            Price
+                        </h2>
+                        <footer>
+                            <button id="buy-button">Buy Now</button>
+                        </footer>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
     
 </body>
 </html>
