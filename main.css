@@ -77,6 +77,12 @@ header h3 {
     border: 1px solid #ccc !important;
 }
 
+#computer-img
+{
+    max-height: 256px;
+    max-width: 256px;
+}
+
 /* All buttons should look similar */
 button
 {

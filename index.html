@@ -20,21 +20,21 @@
                 <h2>
                     Joe Banker
                 </h2>
-                <p>Balance: </p>
-                <p>Outstanding Loan</p>
+                <p id="bank-balance">Balance: </p>
+                <p id="bank-outstanding-loan">Outstanding Loan</p>
                 <footer class="button-footer">
-                    <button id="bank-button">Get a loan</button>
-                    <button id="repay-button">Repay Loan</button>
+                    <button onclick="loan()" id="bank-button">Get a loan</button>
+                    <button onclick="repayLoan()" id="bank-repay-button">Repay Loan</button>
                 </footer>
             </div>
             <div class="content content-row-size">
                 <h2>
                     Work
                 </h2>
-                <p>pay: </p>
+                <p id="work-pay">pay: </p>
                 <footer class="button-footer">
-                    <button id="pay-bank-button">Bank</button>
-                    <button id="work-button">Work</button>
+                    <button onclick="bank()" id="pay-bank-button">Bank</button>
+                    <button onclick="work()" id="work-button">Work</button>
                 </footer>
             </div>
             <div class="content content-row-size">
@@ -42,14 +42,12 @@
                     Laptops
                 </h2>
                 <form action="">
-                    <select name="Laptops" id="Laptop-picker">
-                      <option value="volvo">Laptop1</option>
-                      <option value="saab">Laptop2</option>
-                      <option value="opel">Laptop3</option>
-                      <option value="audi">Laptop4</option>
+                    <select onchange="updateLaptops(this)" name="Laptops" id="Laptop-picker">
                     </select>
                 </form>
-                <p>Laptop Text</p>
+                <div>
+                    <p id = "laptop-features">Laptop Text</p>
+                </div>
             </div>
         </div>
 
@@ -58,21 +56,19 @@
             <div class="content visible-border content-info-size">
                 <div class="row2">
                     <div class="column">
-                        <img src="">
+                        <img id="computer-img" src="" alt="Not Found" onerror=this.src="images/tempimg.jpg">
                     </div>
                     <div class="column">
-                        <h2>
+                        <h2 id = "computer-header">
                             Computer
                         </h2>
-                        <p>computer text </p>
+                        <p id = "computer-text">computer text </p>
                     </div>
                     <div class="column">
-                        <h2>
+                        <h2 id = "computer-price">
                             Price
                         </h2>
-                        <footer>
-                            <button id="buy-button">Buy Now</button>
-                        </footer>
+                        <button onclick="buyLaptop()" id="buy-button">Buy Now</button>
                     </div>
                 </div>
                 
@@ -80,5 +76,6 @@
         </div>
     </div>
     
+    <script src="logic.js"></script>
 </body>
 </html>
