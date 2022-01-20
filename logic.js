@@ -10,7 +10,7 @@ const websiteElements =
 {
     bankBalance: null,
     loanBalance: null,
-    repayLoanButton: null,
+    loanHideElements: [],
     workBalance: null,
     laptopFeaturesText: null,
     computerHeader: null,
@@ -22,29 +22,32 @@ const allLaptops = {};
 const numberFormater = new Intl.NumberFormat('da', { style: 'currency', currency: 'DKK' })
 
 // Button onclick events (plus options selector)
+//When you want to work and make money
 function work()
 {
     state.workBalance += 100;
-    updateWorkUI();
+    updateWork();
 }
+//When you want to transfer money from work to bank
 function bank()
 {
     //Taking 10% from pay if there is a loan
     let loanMoney = state.workBalance * 0.1;
     state.workBalance -= loanMoney;
     state.loanBalance -= loanMoney;
-    if (state.loanBalance <= 0) //if too much is paid for the loan, pay it back to the work. This negates the need to check if there is a loan in the first place, saving an if statement.
+    if (state.loanBalance <= 0) //if too much is paid for the loan, pay it to the bank. This negates the need to check if there is a loan in the first place, saving an if statement.
     {
         loanFullyRepaid();
     }
 
-    //Updating numbers and ui
+    //Updating state and ui
     state.bankBalance += state.workBalance;
     state.workBalance = 0;
-    updateWorkUI();
+    updateWork();
     updateBankUI();
     updateLoanUI();
 }
+//When you want to loan some cash
 function loan()
 {
     if (state.loanBalance > 0) 
@@ -58,35 +61,35 @@ function loan()
         return;
     }
 
+    //Prompt
     const loanAmount = Number(window.prompt("Enter number. Max twice as much as in bank balance"));
     
-    if (loanAmount) 
+    //If they put in a valid response
+    if (loanAmount)
     {
-        if (loanAmount <= (state.bankBalance * 2) && loanAmount > 0) 
+        if (loanAmount <= (maxLoanAmount()) && loanAmount > 0) 
         {
+            //The loan went through
             window.confirm("Congratulations! You made a loan of " + numberFormater.format(loanAmount));
+            state.loanBalance += loanAmount;
+            state.bankBalance += loanAmount;
+            
+            updateBankUI();
+            updateLoanUI();
+            //Shows the loan button and text
+            showLoanElements();
         }
         else
         {
-            window.confirm("You can max loan " + numberFormater.format((state.bankBalance * 2)));
-            return;
+            window.confirm("You can max loan " + numberFormater.format(maxLoanAmount()));
         }
-        
     }
     else
     {
         window.confirm("You need to write a number to get a loan");
-        return;
     }
-
-    state.loanBalance += loanAmount;
-    state.bankBalance += loanAmount;
-    
-    updateBankUI();
-    updateLoanUI();
-    //Shows the loan button and text
-    showLoanElements();
 }
+//When you want to repay the entire loan
 function repayLoan()
 {
     state.loanBalance -= state.workBalance;
@@ -95,15 +98,17 @@ function repayLoan()
     {
         loanFullyRepaid();
     }
-    updateWorkUI();
+    updateWork();
     updateLoanUI();
     updateBankUI();
 }
+//When a different laptop is chosen
 function updateLaptops(element)
 {
     state.currentLaptop = element.value;
     updateLaptopUI(element.value);
 }
+//When the user has finally bought a new computer
 function buyLaptop()
 {
     const price = allLaptops[state.currentLaptop].price;
@@ -127,19 +132,23 @@ function loanFullyRepaid()
     
     hideLoanElements();
 }
+function maxLoanAmount()
+{
+    return state.bankBalance * 2;
+}
 
 //UI updaters
 function updateLaptopUI(currentLaptop)
 {
     const cl = allLaptops[currentLaptop];
-    websiteElements.laptopFeaturesText.innerText = cl.specs.join('\n'); //specs is an array, so I'm just making it into a string where every entry is it's own sentence
+    websiteElements.laptopFeaturesText.innerText  = cl.specs.join('\n'); //specs is an array, so I'm just making it into a string where every entry is it's own sentence
     websiteElements.computerHeader.innerText = cl.title;
     websiteElements.computerImg.setAttribute("src", "https://noroff-komputer-store-api.herokuapp.com/" + cl.image);
     websiteElements.computerPrice.innerText = numberFormater.format(cl.price);
     websiteElements.computerText.innerText = cl.description;
 }
 
-function updateWorkUI()
+function updateWork()
 {
     websiteElements.workBalance.innerText = numberFormater.format(state.workBalance);
 }
@@ -154,13 +163,19 @@ function updateLoanUI()
 
 function showLoanElements()
 {
-    websiteElements.repayLoanButton.style.display = "block";
-    websiteElements.loanBalance.style.display = "block";
+    for (let i = 0; i < websiteElements.loanHideElements.length; i++) 
+    {
+        const element = websiteElements.loanHideElements[i];
+        element.style.display = "flex";
+    }
 }
 function hideLoanElements()
 {
-    websiteElements.repayLoanButton.style.display = "none";
-    websiteElements.loanBalance.style.display = "none";
+    for (let i = 0; i < websiteElements.loanHideElements.length; i++) 
+    {
+        const element = websiteElements.loanHideElements[i];
+        element.style.display = "none";
+    }
 }
 
 // fetch, cache and show it on the website
@@ -175,16 +190,29 @@ function initData(laptops)
         createOptionElements(laptopSelector, laptop);
     }
     cacheNeededElements();
-    websiteElements.repayLoanButton.style.display = "none";
-    websiteElements.loanBalance.style.display = "none";
+    hideLoanElements();
     state.currentLaptop = 1;
     updateLaptopUI(1);
 }
+//Create the option element and then set value to id before adding to dom. This way I can easily access the laptop using id
+function createOptionElements(laptopSelector, laptop)
+{
+    let laptopOption = document.createElement("option");
+    laptopOption.setAttribute("value", laptop.id);
+    laptopOption.innerText = laptop.title;
+    laptopSelector.appendChild(laptopOption);
+}
+function cacheLaptops(laptop)
+{
+    // Javascript is loose with the rules, so I can copy the info directly into an object
+    allLaptops[laptop.id] = laptop;
+}
+
 function cacheNeededElements()
 {
     //Bank elements
     websiteElements.loanBalance = document.getElementById("bank-outstanding-loan");
-    websiteElements.repayLoanButton = document.getElementById("bank-repay-button");
+    websiteElements.loanHideElements = document.getElementsByClassName("hide-elements");
     websiteElements.bankBalance = document.getElementById("bank-balance");
 
     //Work elements
@@ -198,20 +226,7 @@ function cacheNeededElements()
     websiteElements.computerText = document.getElementById("computer-text");
 }
 
-//Create the option element and then set value to id before adding to dom. This way I can easily access the laptop using id
-function createOptionElements(laptopSelector, laptop)
-{
-    let laptopOption = document.createElement("option");
-    laptopOption.setAttribute("value", laptop.id);
-    laptopOption.innerText = laptop.title;
-    laptopSelector.appendChild(laptopOption);
-}
 
-function cacheLaptops(laptop)
-{
-    // Javascript is loose with the rules, so I can copy the info directly into an object
-    allLaptops[laptop.id] = laptop;
-}
 async function fetchData()
 {
     let response = await fetch('https://noroff-komputer-store-api.herokuapp.com/computers');

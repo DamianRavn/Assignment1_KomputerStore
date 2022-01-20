@@ -17,37 +17,61 @@
         <!-- First row -->
         <div class="row1">
             <div class="content content-row-size">
-                <h2>
-                    Joe Banker
-                </h2>
-                <p id="bank-balance">Balance: </p>
-                <p id="bank-outstanding-loan">Outstanding Loan</p>
-                <footer class="button-footer">
-                    <button onclick="loan()" id="bank-button">Get a loan</button>
-                    <button onclick="repayLoan()" id="bank-repay-button">Repay Loan</button>
-                </footer>
+                <div class="constent-placer">
+                    <h2>
+                        Joe Banker
+                    </h2>
+                    <div class="flex-div">
+                        <p>Balance: </p>
+                        <p id="bank-balance">0kr </p>
+                    </div>
+                    <div class="flex-div hide-elements">
+                        <p>Outstanding Loan</p>
+                        <p id="bank-outstanding-loan">0kr</p>
+                    </div>
+                    
+                    <footer class="button-footer">
+                        <div class="double-button">
+                            <button onclick="loan()" id="bank-button">Get a loan</button>
+                            <button onclick="repayLoan()" class="hide-elements" id="bank-repay-button">Repay Loan</button>
+                        </div>
+                    </footer>
+                </div>
+                
             </div>
             <div class="content content-row-size">
-                <h2>
-                    Work
-                </h2>
-                <p id="work-pay">pay: </p>
-                <footer class="button-footer">
-                    <button onclick="bank()" id="pay-bank-button">Bank</button>
-                    <button onclick="work()" id="work-button">Work</button>
-                </footer>
+                <div class="constent-placer">
+                    <h2>
+                        Work
+                    </h2>
+                    <div class="flex-div">
+                        <p>Pay: </p>
+                        <p id="work-pay">0kr </p>
+                    </div>
+                    
+                    <footer class="button-footer">
+                        <div class="double-button">
+                            <button onclick="bank()" id="pay-bank-button">Bank</button>
+                            <button onclick="work()" id="work-button">Work</button>
+                        </div>
+                        
+                    </footer>
+                </div>
+                
             </div>
             <div class="content content-row-size">
-                <h2>
-                    Laptops
-                </h2>
-                <form action="">
-                    <select onchange="updateLaptops(this)" name="Laptops" id="Laptop-picker">
-                    </select>
-                </form>
-                <div>
-                    <h4>Features:</h4>
-                    <p id = "laptop-features">Laptop Text</p>
+                <div class="constent-placer">
+                    <h2>
+                        Laptops
+                    </h2>
+                    <form action="">
+                        <select onchange="updateLaptops(this)" name="Laptops" id="Laptop-picker">
+                        </select>
+                    </form>
+                    <div class="features-text">
+                        <h4>Features:</h4>
+                        <p id = "laptop-features">Laptop Text</p>
+                    </div>
                 </div>
             </div>
         </div>
