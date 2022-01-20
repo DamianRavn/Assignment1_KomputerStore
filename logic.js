@@ -33,10 +33,9 @@ function bank()
     let loanMoney = state.workBalance * 0.1;
     state.workBalance -= loanMoney;
     state.loanBalance -= loanMoney;
-    if (state.loanBalance < 0) //if too much is paid for the loan, pay it back to the work. This negates the need to check if there is a loan in the first place, saving an if statement.
+    if (state.loanBalance <= 0) //if too much is paid for the loan, pay it back to the work. This negates the need to check if there is a loan in the first place, saving an if statement.
     {
-        state.workBalance += Math.abs(state.loanBalance);
-        state.loanBalance = 0;
+        loanFullyRepaid();
     }
 
     //Updating numbers and ui
@@ -50,29 +49,51 @@ function loan()
 {
     if (state.loanBalance > 0) 
     {
-        console.log("You need to pay up your debt first.");
+        window.confirm("You need to pay up your debt first.");
+        return;
+    }
+    if (state.bankBalance === 0) 
+    {
+        window.confirm("You need money in your bank account first.");
         return;
     }
 
-    state.loanBalance += 200;
-    state.bankBalance += 200;
+    const loanAmount = Number(window.prompt("Enter number. Max twice as much as in bank balance"));
+    
+    if (loanAmount) 
+    {
+        if (loanAmount <= (state.bankBalance * 2) && loanAmount > 0) 
+        {
+            window.confirm("Congratulations! You made a loan of " + numberFormater.format(loanAmount));
+        }
+        else
+        {
+            window.confirm("You can max loan " + numberFormater.format((state.bankBalance * 2)));
+            return;
+        }
+        
+    }
+    else
+    {
+        window.confirm("You need to write a number to get a loan");
+        return;
+    }
+
+    state.loanBalance += loanAmount;
+    state.bankBalance += loanAmount;
     
     updateBankUI();
     updateLoanUI();
     //Shows the loan button and text
-    const repayLoanButton = websiteElements.repayLoanButton;
-    const loanBalance = websiteElements.loanBalance;
-    elementShowHideSwitch(repayLoanButton);
-    elementShowHideSwitch(loanBalance);
+    showLoanElements();
 }
 function repayLoan()
 {
     state.loanBalance -= state.workBalance;
     state.workBalance = 0;
-    if (state.loanBalance < 0) //if too much is paid for the loan, pay it back to the work. This negates the need to check if there is a loan in the first place, saving an if statement.
+    if (state.loanBalance <= 0) //if too much is paid for the loan, pay it back to the work. This negates the need to check if there is a loan in the first place, saving an if statement.
     {
-        state.bankBalance += Math.abs(state.loanBalance);
-        state.loanBalance = 0;
+        loanFullyRepaid();
     }
     updateWorkUI();
     updateLoanUI();
@@ -88,20 +109,29 @@ function buyLaptop()
     const price = allLaptops[state.currentLaptop].price;
     if (state.bankBalance <= price) 
     {
-        console.log("Not enough money to buy!");
+        window.confirm("Not enough money to buy!");
         return;
     }
 
     state.bankBalance -= price;
-    console.log("Congratulations! You are the proud owner of " + allLaptops[state.currentLaptop].title);
+    window.confirm("Congratulations! You are the proud owner of " + allLaptops[state.currentLaptop].title);
 
     updateBankUI();
+}
+
+//Helper functions
+function loanFullyRepaid()
+{
+    state.bankBalance += Math.abs(state.loanBalance);
+    state.loanBalance = 0;
+    
+    hideLoanElements();
 }
 
 //UI updaters
 function updateLaptopUI(currentLaptop)
 {
-    let cl = allLaptops[currentLaptop];
+    const cl = allLaptops[currentLaptop];
     websiteElements.laptopFeaturesText.innerText = cl.specs
     websiteElements.computerHeader.innerText = cl.title;
     websiteElements.computerImg.setAttribute("src", "https://noroff-komputer-store-api.herokuapp.com/" + cl.image);
@@ -122,17 +152,15 @@ function updateLoanUI()
     websiteElements.loanBalance.innerText = numberFormater.format(state.loanBalance);
 }
 
-function elementShowHideSwitch(element)
+function showLoanElements()
 {
-    
-    if (element.style.display === "none") 
-    {
-        element.style.display = "flex";
-    }
-    else
-    {
-        element.style.display = "none";
-    }
+    websiteElements.repayLoanButton.style.display = "block";
+    websiteElements.loanBalance.style.display = "block";
+}
+function hideLoanElements()
+{
+    websiteElements.repayLoanButton.style.display = "none";
+    websiteElements.loanBalance.style.display = "none";
 }
 
 // fetch, cache and show it on the website
