@@ -132,7 +132,7 @@ function loanFullyRepaid()
 function updateLaptopUI(currentLaptop)
 {
     const cl = allLaptops[currentLaptop];
-    websiteElements.laptopFeaturesText.innerText = cl.specs
+    websiteElements.laptopFeaturesText.innerText = cl.specs.join('\n'); //specs is an array, so I'm just making it into a string where every entry is it's own sentence
     websiteElements.computerHeader.innerText = cl.title;
     websiteElements.computerImg.setAttribute("src", "https://noroff-komputer-store-api.herokuapp.com/" + cl.image);
     websiteElements.computerPrice.innerText = numberFormater.format(cl.price);
